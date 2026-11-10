@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#fcf8ef" />
+    <title>ねこねこ かけ算パズル</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <a class="brand" href="./" aria-label="ねこねこ かけ算パズル"
+          ><span class="brand-cat">🐾</span
+          ><span>ねこねこ<small>かけ算パズル</small></span></a
+        >
+        <div class="header-right">
+          <span class="edition">あそんで、みつける。かけ算のきまり</span
+          ><button
+            id="sound"
+            class="icon-button"
+            aria-label="音をオンにする"
+            aria-pressed="false"
+          >
+            ♪<span>OFF</span>
+          </button>
+        </div>
+      </header>
+      <main>
+        <nav class="steps" aria-label="ステージをえらぶ">
+          <button data-stage="0"><b>1</b><span>ならべかえ</span><i>●</i></button
+          ><span class="step-path"></span
+          ><button data-stage="1">
+            <b>2</b><span>ふたつに分ける</span><i>●</i></button
+          ><span class="step-path"></span
+          ><button data-stage="2">
+            <b>3</b><span>くふうして計算</span><i>●</i>
+          </button>
+        </nav>
+        <section class="mission">
+          <div>
+            <p class="eyebrow" id="stage-label">STAGE 01 ・ ならべかえ</p>
+            <h1 id="mission"></h1>
+            <p id="instruction"></p>
+          </div>
+          <div class="mission-stamp" aria-hidden="true">
+            <span>きょうの<br />ミッション</span>✦
+          </div>
+        </section>
+        <section class="game" aria-label="ねこの広場">
+          <div class="game-toolbar">
+            <span class="field-label"
+              ><span class="green-dot"></span>ねこのひろば</span
+            ><span class="total">ぜんぶで <b id="total">28</b> ひき</span
+            ><button id="reset" class="text-button">↻ やりなおす</button>
+          </div>
+          <div class="board-wrap">
+            <svg
+              id="board"
+              viewBox="0 0 760 540"
+              role="group"
+              aria-label="ねこの隊列。下のハンドルでうごかせます"
+            >
+              <defs>
+                <filter
+                  id="shadow"
+                  x="-40%"
+                  y="-40%"
+                  width="180%"
+                  height="190%"
+                >
+                  <feDropShadow
+                    dx="0"
+                    dy="3"
+                    stdDeviation="1.5"
+                    flood-color="#705f45"
+                    flood-opacity=".12"
+                  />
+                </filter>
+                <pattern
+                  id="dots"
+                  width="24"
+                  height="24"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <circle cx="2" cy="2" r="1" fill="#e5e8d7" />
+                </pattern>
+              </defs>
+              <rect width="760" height="540" fill="url(#dots)" />
+              <g id="backdrop"></g>
+              <g id="cats"></g>
+              <g id="labels"></g>
+            </svg>
+            <button
+              id="handle"
+              class="handle"
+              role="slider"
+              aria-label="隊列を回す"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+            >
+              <span>↔</span>
+            </button>
+            <div id="drag-tip" class="drag-tip">
+              ここを 右へひっぱろう <span>→</span>
+            </div>
+            <div class="board-corner" aria-hidden="true">✿</div>
+          </div>
+          <div class="board-caption">
+            <span id="arrangement"></span
+            ><span id="feedback" role="status" aria-live="polite"
+              >ねこの数は、そのまま。</span
+            ><button id="continue" class="text-button" hidden>
+              ✦ クリアをみる →
+            </button>
+          </div>
+        </section>
+        <section class="math-card" aria-label="いまのかけ算">
+          <div class="math-heading">
+            <span class="pencil">✎</span>
+            <div>
+              <p class="eyebrow">うごきと つながる</p>
+              <h2>いまの かけ算</h2>
+            </div>
+          </div>
+          <div id="formula" class="formula" aria-live="off"></div>
+          <div id="group-counts" class="group-counts"></div>
+        </section>
+        <div class="bottom-bar">
+          <button id="hint" class="text-button">☀ ヒントをみる</button
+          ><span>まちがえても だいじょうぶ。何度でも やってみよう！</span
+          ><span class="page-count" id="page-count">01 / 03</span>
+        </div>
+        <p id="hint-text" class="hint-text" hidden role="status"></p>
+      </main>
+      <footer>
+        🐾 <span>小さな「わかった！」を、いっしょに。</span
+        ><span class="prototype">PLAYABLE PROTOTYPE · v1.0</span>
+      </footer>
+    </div>
+    <dialog id="clear-dialog" aria-labelledby="clear-title">
+      <div class="clear-content">
+        <div class="clear-icon" aria-hidden="true">✦</div>
+        <p class="eyebrow" id="clear-kicker">MISSION CLEAR!</p>
+        <h2 id="clear-title">できたにゃ！</h2>
+        <p id="discovery"></p>
+        <div id="proof" class="proof"></div>
+        <p id="lesson"></p>
+        <button id="next" class="primary-button">
+          つぎのステージへ <span>→</span></button
+        ><button id="look" class="text-button">
+          ねこたちを もういちど見る
+        </button>
+      </div>
+    </dialog>
+    <div id="confetti" aria-hidden="true"></div>
+    <script src="assets/cat.js"></script>
+    <script src="game.js"></script>
+  </body>
+</html>
